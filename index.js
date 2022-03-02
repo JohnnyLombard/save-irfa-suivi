@@ -1,7 +1,9 @@
 // info :
 // -- Mettre déclancheur par fonction (selon heure, intervalle d'une heure entre chaque, TEST OK)
 // -- Génération de lien de formulaire selon la date prévue TEST OK
-// -- Envoyer mail après la création du lien TEST OK sortie et 3 mois
+// -- Envoyer mail après la création du lien TEST OK sortie et 3 mois et 6 mois
+// -- Enlever obligation sur formulaire champ téléphone fixe
+// -- Créer sheet reception données formulaire ( 1 par sortie m, m+3, m+6)
 
 /***************************************************************/
 /**                                                           **/
@@ -65,9 +67,12 @@ function sendMailOutLearn() {
     var setRow = parseInt(i) + 3;
 
     if (currentRow[0] == "" && currentRow[16] != "") {
-      if (link == "") break;
-      if (status == "GForms envoyé") continue;
-      if (emailAddress == "") break;
+      // if (link == "")
+      //    break;
+      // if (status == "GForms envoyé")
+      //    continue;
+      // if (emailAddress == "")
+      //    break;
 
       var link_url = '<a href="' + link + '">Lien vers le formulaire</a>';
       var message =
@@ -106,7 +111,7 @@ function createLinkForm3Month() {
   var sheet = SpreadsheetApp.openById(
     "19icdiubW-8CB6y6AnJi2iB1U90aOembbqafsuJ0_Gac"
   ).getSheetByName("BDD_3mois"); //ID Google Sheets et nom de l'onglet
-  var dataRange = sheet.getRange("A3:Q");
+  var dataRange = sheet.getRange("A3:R");
   var data = dataRange.getValues();
   for (var i = 0; i < data.length; i++) {
     var rowData = data[i];
@@ -118,7 +123,12 @@ function createLinkForm3Month() {
     var setRow = parseInt(i) + 3;
     var date01 = new Date();
     var out = rowData[13];
-    if (date01.valueOf() >= out) {
+    var plusTrois = rowData[17];
+
+    // var formattedDebut = Utilities.formatDate(new Date(), "GMT +1", "dd/MM/yyyy");
+    // var FormattedFin = Utilities.formatDate(new Date(plusTrois), "GMT + 1", "dd/MM/yyyy");
+
+    if (date01 >= plusTrois && rowData[0] == "") {
       sheet
         .getRange(setRow, 17)
         .setFormula(
@@ -199,7 +209,7 @@ function createLinkForm6Month() {
   var sheet = SpreadsheetApp.openById(
     "19icdiubW-8CB6y6AnJi2iB1U90aOembbqafsuJ0_Gac"
   ).getSheetByName("BDD_6mois"); //ID Google Sheets et nom de l'onglet
-  var dataRange = sheet.getRange("A3:Q");
+  var dataRange = sheet.getRange("A3:R");
   var data = dataRange.getValues();
   for (var i = 0; i < data.length; i++) {
     var rowData = data[i];
@@ -209,10 +219,14 @@ function createLinkForm6Month() {
     var link = rowData[16];
     var status = rowData[0];
     var setRow = parseInt(i) + 3;
-    var date01 = new Date();
+    var date02 = new Date();
     var out = rowData[13];
+    var plusSix = rowData[17];
 
-    if (date01.valueOf() >= out) {
+    //var date01 = Utilities.formatDate(new Date(), "GMT +1", "dd/MM/yyyy");
+    // var FormattedFin = Utilities.formatDate(new Date(plusSix), "GMT + 1", "dd/MM/yyyy");
+
+    if (date02 >= plusSix && rowData[0] == "") {
       sheet
         .getRange(setRow, 17)
         .setFormula(
